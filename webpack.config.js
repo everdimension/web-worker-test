@@ -3,7 +3,6 @@ const path = require('path');
 module.exports = {
   entry: {
     app: './src/app.js',
-    worker: './src/simple.worker.js',
   },
   output: {
     path: path.resolve(__dirname, 'build'),
@@ -18,14 +17,11 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'babel-loader',
       },
-      // {
-      //   test: /worker\.js$/,
-      //   exclude: /node_modules/,
-      //   use: [
-      //     { loader: 'file-loader' },
-      //     { loader: 'babel-loader' },
-      //   ],
-      // },
+      {
+        test: /worker\.js$/,
+        exclude: /node_modules/,
+        loader: 'worker-loader',
+      },
     ],
   },
 
