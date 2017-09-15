@@ -1,4 +1,4 @@
-function doComputations(iterations) {
+export default function doComputations(iterations = 100000000) {
   const arr = [];
   for (var i = 0; i < iterations; i++) {
     const val = i * Math.sqrt(arr.length);
@@ -8,13 +8,4 @@ function doComputations(iterations) {
     arr.push({ val });
   }
   return arr;
-}
-
-
-self.onmessage = function(e) {
-  console.log('worker msg....', e);
-  const res = doComputations(e.data);
-
-  console.log('res');
-  postMessage(res);
 }

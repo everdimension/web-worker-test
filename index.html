@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style>
+    input {
+      width: 100%;
+      max-width: 500px;
+    }
+
+    button {
+      cursor: pointer;
+      padding: 12px;
+      background: #999;
+      font-family: 'Roboto Slab', sans-serif;
+      font-size: 16px;
+      border: none;
+      outline: none;
+      color: white;
+      border-bottom: 2px solid #797979;
+    }
+
+    input {
+      display: block;
+      margin-bottom: 15px;
+      margin-top: 5px;
+      padding: 10px;
+      border: 1px solid #cfcfcf;
+      font-family: sans-serif;
+      font-size: 14px;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <h2>Web worker</h2>
+  <input
+    type="text"
+    placeholder="when heavy computations are in the main thread, typing is not very responsive..."
+  />
+  <p>
+    <button id="mainThred">perform computations in the main thread</button>
+    <br />
+    <br />
+    <button id="worker">perform computations in the web worker</button>
+  </p>
+
+  <script src="build/app.bundle.js"></script>
+</body>
+</html>

@@ -1,10 +1,14 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/app.js',
+  entry: {
+    app: './src/app.js',
+    worker: './src/simple.worker.js',
+  },
   output: {
     path: path.resolve(__dirname, 'build'),
-    filename: 'bundle.js',
+    filename: '[name].bundle.js',
+    publicPath: '/build/',
   },
 
   module: {
@@ -14,17 +18,20 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'babel-loader',
       },
-      {
-        test: /worker\.js$/,
-        exclude: /node_modules/,
-        loader: 'file-loader',
-      },
+      // {
+      //   test: /worker\.js$/,
+      //   exclude: /node_modules/,
+      //   use: [
+      //     { loader: 'file-loader' },
+      //     { loader: 'babel-loader' },
+      //   ],
+      // },
     ],
   },
 
   target: 'web',
 
   devServer: {
-    contentBase: './build',
+    contentBase: './',
   },
 };
