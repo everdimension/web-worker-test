@@ -48,7 +48,7 @@ if (production) {
       const fileContents = fs.readFileSync(htmlPath, 'utf8');
       const html = fileContents.replace(
         'app.bundle.js',
-        `app.${stats.hash}.bundle.js`,
+        `app.${stats.hash}.bundle.js`
       );
       fs.writeFileSync(htmlPath, html);
     });
