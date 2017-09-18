@@ -1,5 +1,10 @@
 const path = require('path');
 
+const env = process.env.NODE_ENV;
+const production = env === 'production';
+
+console.log('env is', env, production);
+
 module.exports = {
   entry: {
     app: './src/app.js',
@@ -7,7 +12,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'build'),
     filename: '[name].bundle.js',
-    publicPath: '/build/',
+    publicPath: 'build/',
   },
 
   module: {
