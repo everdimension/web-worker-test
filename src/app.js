@@ -1,14 +1,13 @@
 import doComputations from './doComputations';
-
 const createNewWorker = require('./simple.worker.js');
-// const worker = new Worker(require('./simple.worker.js'));
-// const worker = require('file-loader!worker');
-const worker = createNewWorker();
+const stanadloneWorkerURL = require('file-loader!./standalone-worker.js');
 
 const input = document.querySelector('input');
 const mainThreadButton = document.getElementById('mainThread');
 const workerButton = document.getElementById('worker');
+const standaloneWorkerButton = document.getElementById('standaloneWorker');
 const results = document.createElement('div');
+
 document.body.appendChild(results);
 
 function resetPerformance() {
@@ -22,16 +21,11 @@ function getTimeTaken() {
   return perfMeasure.duration;
 }
 
-function renderResult(duration) {
+function renderResult({ type, duration }) {
   const p = document.createElement('p');
-  p.textContent = `Time taken: ${duration}`;
+  p.textContent = `Type: ${type}, Time taken: ${duration}`;
   results.appendChild(p);
 }
-
-worker.onmessage = (e) => {
-  performance.mark('end');
-  renderResult(getTimeTaken());
-};
 
 mainThreadButton.addEventListener('click', () => {
   resetPerformance();
@@ -43,14 +37,37 @@ mainThreadButton.addEventListener('click', () => {
 
   performance.mark('end');
 
-  renderResult(getTimeTaken());
+  renderResult({ type: 'main thread', duration: getTimeTaken() });
 });
 
 workerButton.addEventListener('click', () => {
   resetPerformance();
 
+  const webpackWorker = createNewWorker();
+  webpackWorker.onmessage = (e) => {
+    performance.mark('end');
+    renderResult({ type: 'webpack web worker', duration: getTimeTaken() });
+    webpackWorker.terminate();
+  };
+
   input.focus();
   performance.mark('start');
 
-  worker.postMessage(100000000);
+  webpackWorker.postMessage(100000000);
+});
+
+standaloneWorkerButton.addEventListener('click', () => {
+  resetPerformance();
+
+  const standaloneWorker = new Worker(stanadloneWorkerURL);
+  standaloneWorker.onmessage = (e) => {
+    performance.mark('end');
+    renderResult({ type: 'standalone web worker', duration: getTimeTaken() });
+    standaloneWorker.terminate();
+  };
+
+  input.focus();
+  performance.mark('start');
+
+  standaloneWorker.postMessage(100000000);
 });
