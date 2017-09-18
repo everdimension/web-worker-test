@@ -1,73 +1,105 @@
 import doComputations from './doComputations';
 const createNewWorker = require('./simple.worker.js');
 const stanadloneWorkerURL = require('file-loader!./standalone-worker.js');
+import {
+  mainThreadButton,
+  mainThreadInlineButton,
+  workerButton,
+  standaloneWorkerButton,
+  input,
+  renderResult,
+  renderLoader,
+  removeLoader,
+} from './view';
 
-const input = document.querySelector('input');
-const mainThreadButton = document.getElementById('mainThread');
-const workerButton = document.getElementById('worker');
-const standaloneWorkerButton = document.getElementById('standaloneWorker');
-const results = document.createElement('div');
+const NUMBER_OF_ITERATIONS = 100000000;
 
-document.body.appendChild(results);
-
-function resetPerformance() {
-  performance.clearMeasures();
-  performance.clearMarks();
-}
-
-function getTimeTaken() {
-  performance.measure('computations', 'start', 'end');
-  const perfMeasure = performance.getEntriesByType('measure')[0];
-  return perfMeasure.duration;
-}
-
-function renderResult({ type, duration }) {
-  const p = document.createElement('p');
-  p.textContent = `Type: ${type}, Time taken: ${duration}`;
-  results.appendChild(p);
+function getDuration(type) {
+  performance.measure(type, `start-${type}`, `end-${type}`);
+  const measureItems = performance
+    .getEntriesByType('measure')
+    .filter(m => m.name === type);
+  const latestMeasure = measureItems[measureItems.length - 1];
+  return latestMeasure.duration;
 }
 
 mainThreadButton.addEventListener('click', () => {
-  resetPerformance();
+  performance.mark('start-mainThread');
 
-  input.focus();
-  performance.mark('start');
+  renderLoader();
 
-  doComputations(100000000); // 7844.904052734375ms
+  setTimeout(() => { // give a chance to `renderLoader`
+    doComputations(NUMBER_OF_ITERATIONS);
 
-  performance.mark('end');
+    performance.mark('end-mainThread');
 
-  renderResult({ type: 'main thread', duration: getTimeTaken() });
+    setTimeout(() => removeLoader());
+    renderResult({ type: 'mainThread', duration: getDuration('mainThread') });
+  }, 100);
+});
+
+function doComputationsInline(iterations = 100000000) {
+  /* this function is an exact copy of `/src/doComputations.js` */
+  const arr = [];
+  for (var i = 0; i < iterations; i++) {
+    const val = i * Math.sqrt(arr.length);
+    if (arr.length > 1000000) {
+      arr.length = 200000;
+    }
+    arr.push({ val });
+  }
+  return arr;
+}
+
+mainThreadInlineButton.addEventListener('click', () => {
+  performance.mark('start-mainThreadInline');
+
+  renderLoader();
+  setTimeout(() => { // give a chance to `renderLoader`
+    doComputations(NUMBER_OF_ITERATIONS);
+
+    performance.mark('end-mainThreadInline');
+
+    setTimeout(() => removeLoader());
+    renderResult({
+      type: 'mainThreadInline',
+      duration: getDuration('mainThreadInline'),
+    }, 100);
+  });
 });
 
 workerButton.addEventListener('click', () => {
-  resetPerformance();
-
   const webpackWorker = createNewWorker();
-  webpackWorker.onmessage = (e) => {
-    performance.mark('end');
-    renderResult({ type: 'webpack web worker', duration: getTimeTaken() });
+  webpackWorker.onmessage = e => {
+    performance.mark('end-webpackWorker');
+    removeLoader();
+    renderResult({
+      type: 'webpackWorker',
+      duration: getDuration('webpackWorker'),
+    });
     webpackWorker.terminate();
   };
 
-  input.focus();
-  performance.mark('start');
+  renderLoader();
+  performance.mark('start-webpackWorker');
 
-  webpackWorker.postMessage(100000000);
+  webpackWorker.postMessage(NUMBER_OF_ITERATIONS);
 });
 
 standaloneWorkerButton.addEventListener('click', () => {
-  resetPerformance();
-
   const standaloneWorker = new Worker(stanadloneWorkerURL);
-  standaloneWorker.onmessage = (e) => {
-    performance.mark('end');
-    renderResult({ type: 'standalone web worker', duration: getTimeTaken() });
+  standaloneWorker.onmessage = e => {
+    performance.mark('end-standaloneWorker');
+    removeLoader();
+    renderResult({
+      type: 'standaloneWorker',
+      duration: getDuration('standaloneWorker'),
+    });
     standaloneWorker.terminate();
   };
 
-  input.focus();
-  performance.mark('start');
+  renderLoader();
+  performance.mark('start-standaloneWorker');
 
-  standaloneWorker.postMessage(100000000);
+  standaloneWorker.postMessage(NUMBER_OF_ITERATIONS);
 });
