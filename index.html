@@ -111,12 +111,10 @@
     to run this function in different conditions: in the main thread and in the main worker.
   </p>
   <p>
-    The peculiarity that I've noticed is that the function takes much longer to run in a web worker that
-    has webpack imports. Or may be it has to do with the way webpack's
-    <a href="https://github.com/webpack-contrib/worker-loader"><code>worker-loader</code></a>
-    works...
+    <b>The peculiarity that I've noticed</b> is that the function takes <b>much</b> longer to run in Chrome when it is
+    <code>imported</code> with webpack.
     See <a href="https://github.com/everdimension/web-worker-test/tree/master/src">source code</a> for details.
   </p>
-  <script src="build/app.3a31f0d91419e6a57c31.bundle.js"></script>
+  <script src="build/app.3b9caf3cd8f9aa1648cf.bundle.js"></script>
 </body>
 </html>
