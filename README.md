@@ -1,7 +1,7 @@
 ## Intro
 
 The code here measures performance of a
-[function](https://github.com/everdimension/web-worker-test/blob/master/src/simple.worker.js)
+[function](https://github.com/everdimension/web-worker-test/blob/master/src/doComputations.js)
 that does some heavy computations with lots
 of iterations&nbsp;(100&#8239;000&#8239;000 by default).
 
