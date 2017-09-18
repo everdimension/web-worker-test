@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <meta name="viewport" content="width=device-width">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font: 16px sans-serif;
+    }
+
+    p {
+      max-width: 800px;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      margin: 0;
+    }
+
+    button {
+      cursor: pointer;
+      padding: 12px;
+      background: #999;
+      font-family: 'Roboto Slab', sans-serif;
+      font-size: 16px;
+      border: none;
+      outline: none;
+      color: white;
+      border-bottom: 2px solid #797979;
+    }
+
+    input {
+      display: block;
+      width: 100%;
+      max-width: 500px;
+      margin-top: 5px;
+      margin-bottom: 5px;
+      padding: 10px;
+      border: 1px solid #cfcfcf;
+      font-family: sans-serif;
+      font-size: 14px;
+      outline: none;
+    }
+
+    #results {
+      color: #2ed05b;
+    }
+
+    .loader {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      color: white;
+      background-color: #444;
+      padding: 10px;
+    }
+
+    code {
+      padding: 0.2em 0.3em;
+      margin: 0;
+      font-size: 85%;
+      background-color: #eee;
+      border-radius: 3px;
+    }
+
+    @media (min-height: 500px) {
+      .visible-small-height {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h2>Web worker</h2>
+  <input
+    type="text"
+    placeholder="when heavy computations are in the main thread, typing is not very responsive..."
+  />
+  <p class="subtitle">
+    This input is here only for an indication of whether the page is interactive or the main thread is blocked.
+  </p>
+  <p class="visible-small-height">(For more details scroll to bottom)</p>
+  <p>
+    <button id="mainThread">perform computations in the main thread</button>
+    <br />
+    <br />
+    <button id="mainThreadInline">perform computations in the main thread with in-scope function</button>
+    <br />
+    <br />
+    <button id="webpackWorker">perform computations in the web worker</button>
+    <br />
+    <br />
+    <button id="standaloneWorker">perform computations in a standalone web worker</button>
+  </p>
+
+  <div id="results"></div>
+
+  <p>
+    This page measures performance of the same
+    <a href="https://github.com/everdimension/web-worker-test/blob/master/src/simple.worker.js">function</a>
+    that does some heavy computations with lots of iterations&nbsp;(100&#8239;000&#8239;000 by default).
+  </p>
+  <p>
+    The performance of the function itself does not matter. The main purpose is to compare how long it takes
+    to run this function in different conditions: in the main thread and in the main worker.
+  </p>
+  <p>
+    The peculiarity that I've noticed is that the function takes much longer to run in a web worker that
+    has webpack imports. Or may be it has to do with the way webpack's
+    <a href="https://github.com/webpack-contrib/worker-loader"><code>worker-loader</code></a>
+    works...
+    See <a href="https://github.com/everdimension/web-worker-test/tree/master/src">source code</a> for details.
+  </p>
+  <script src="build/app.bundle.js"></script>
+</body>
+</html>
