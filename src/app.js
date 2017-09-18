@@ -1,3 +1,4 @@
+import 'performance-polyfill'; // for safari
 import doComputations from './doComputations';
 const createNewWorker = require('./simple.worker.js');
 const stanadloneWorkerURL = require('file-loader!./standalone-worker.js');
