@@ -5,14 +5,14 @@ const workerButton = document.getElementById('webpackWorker');
 const standaloneWorkerButton = document.getElementById('standaloneWorker');
 const results = document.getElementById('results');
 
-export function renderResult({ type, duration }) {
+function renderResult({ type, duration }) {
   const p = document.createElement('p');
   p.textContent = `Type: ${type}, Time taken: ${duration}`;
   results.appendChild(p);
   p.scrollIntoView();
 }
 
-export function renderLoader() {
+function renderLoader() {
   const existingLoader = document.querySelector('.loader');
 
   if (existingLoader) {
@@ -25,17 +25,22 @@ export function renderLoader() {
   document.body.appendChild(loader);
 }
 
-export function removeLoader() {
+function removeLoader() {
   const loader = document.querySelector('.loader');
   if (loader) {
     loader.parentNode.removeChild(loader);
   }
 }
 
-export {
+Object.assign(window, {
   mainThreadButton,
   mainThreadInlineButton,
   workerButton,
   standaloneWorkerButton,
+  fromModuleButton,
+  unwrappedCodeButton,
   input,
-};
+  renderLoader,
+  removeLoader,
+  renderResult,
+});
