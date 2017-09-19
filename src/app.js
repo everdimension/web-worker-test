@@ -1,11 +1,6 @@
 import doComputations from './doComputations';
 
-const {
-  fromModuleButton,
-  renderResult,
-  renderLoader,
-  removeLoader,
-} = window;
+const { fromModuleButton, renderResult, renderLoader, removeLoader } = window;
 
 const NUMBER_OF_ITERATIONS = 100000000;
 
@@ -23,7 +18,8 @@ fromModuleButton.addEventListener('click', () => {
 
   renderLoader();
 
-  setTimeout(() => { // give a chance to `renderLoader`
+  setTimeout(() => {
+    // give a chance to `renderLoader`
     doComputations(NUMBER_OF_ITERATIONS);
 
     performance.mark('end-fromModule');

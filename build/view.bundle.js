@@ -71,11 +71,8 @@
 "use strict";
 
 
-var input = document.querySelector('input');
-var mainThreadButton = document.getElementById('mainThread');
-var mainThreadInlineButton = document.getElementById('mainThreadInline');
-var workerButton = document.getElementById('webpackWorker');
-var standaloneWorkerButton = document.getElementById('standaloneWorker');
+var fromModuleButton = document.getElementById('fromModuleButton');
+var unwrappedCodeButton = document.getElementById('unwrappedCodeButton');
 var results = document.getElementById('results');
 
 function renderResult(_ref) {
@@ -109,13 +106,8 @@ function removeLoader() {
 }
 
 Object.assign(window, {
-  mainThreadButton: mainThreadButton,
-  mainThreadInlineButton: mainThreadInlineButton,
-  workerButton: workerButton,
-  standaloneWorkerButton: standaloneWorkerButton,
   fromModuleButton: fromModuleButton,
   unwrappedCodeButton: unwrappedCodeButton,
-  input: input,
   renderLoader: renderLoader,
   removeLoader: removeLoader,
   renderResult: renderResult
