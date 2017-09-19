@@ -43,7 +43,8 @@
 
     renderLoader();
 
-    setTimeout(() => { // give a chance to `renderLoader`
+    setTimeout(() => {
+      // give a chance to `renderLoader`
       doComputations(NUMBER_OF_ITERATIONS);
 
       performance.mark('end-untouched');

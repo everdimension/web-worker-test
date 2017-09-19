@@ -1,8 +1,5 @@
-const input = document.querySelector('input');
-const mainThreadButton = document.getElementById('mainThread');
-const mainThreadInlineButton = document.getElementById('mainThreadInline');
-const workerButton = document.getElementById('webpackWorker');
-const standaloneWorkerButton = document.getElementById('standaloneWorker');
+const fromModuleButton = document.getElementById('fromModuleButton');
+const unwrappedCodeButton = document.getElementById('unwrappedCodeButton');
 const results = document.getElementById('results');
 
 function renderResult({ type, duration }) {
@@ -33,13 +30,8 @@ function removeLoader() {
 }
 
 Object.assign(window, {
-  mainThreadButton,
-  mainThreadInlineButton,
-  workerButton,
-  standaloneWorkerButton,
   fromModuleButton,
   unwrappedCodeButton,
-  input,
   renderLoader,
   removeLoader,
   renderResult,
