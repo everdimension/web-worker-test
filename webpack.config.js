@@ -36,7 +36,7 @@ const config = {
 
   plugins: [
     new CopyWebpackPlugin([
-      { from: './src/app.untouched-by-webpack.js', to: fileNamePattern },
+      { from: './src/app.untouched-by-webpack.js', to: '[name].bundle.js' },
     ]),
   ],
   target: 'web',
@@ -51,7 +51,6 @@ if (production) {
   config.plugins = config.plugins || [];
   config.plugins.push(function replaceHashPlugin() {
     this.plugin('done', function replaceHash(stats) {
-      // eslint-disable-line prefer-arrow-callback
       const htmlPath = path.join(__dirname, 'index.html');
       const fileContents = fs.readFileSync(htmlPath, 'utf8');
       const html = fileContents.replace(
@@ -59,6 +58,12 @@ if (production) {
         `bundle.${stats.hash}.js`
       );
       fs.writeFileSync(htmlPath, html);
+
+      /* add hash to copied app.untouched-by-webpack.js */
+      fs.rename(
+        './build/app.untouched-by-webpack.bundle.js',
+        `./build/app.untouched-by-webpack.bundle.${stats.hash}.js`
+      );
     });
   });
 }
