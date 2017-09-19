@@ -1,3 +1,9 @@
+/**
+ * This file is basically copy of './src/app.js',
+ * but it is not bundled with webpack (just copied as is)
+ * and has no imports, the `doComputations` function is just copied, too
+ */
+
 (function() {
   'use strict';
 
