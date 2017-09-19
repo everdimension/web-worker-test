@@ -1,17 +1,11 @@
-import 'performance-polyfill'; // for safari
 import doComputations from './doComputations';
-const createNewWorker = require('./simple.worker.js');
-const stanadloneWorkerURL = require('file-loader!./standalone-worker.js');
-import {
-  mainThreadButton,
-  mainThreadInlineButton,
-  workerButton,
-  standaloneWorkerButton,
-  input,
+
+const {
+  fromModuleButton,
   renderResult,
   renderLoader,
   removeLoader,
-} from './view';
+} = window;
 
 const NUMBER_OF_ITERATIONS = 100000000;
 
@@ -24,83 +18,17 @@ function getDuration(type) {
   return latestMeasure.duration;
 }
 
-mainThreadButton.addEventListener('click', () => {
-  performance.mark('start-mainThread');
+fromModuleButton.addEventListener('click', () => {
+  performance.mark('start-fromModule');
 
   renderLoader();
 
   setTimeout(() => { // give a chance to `renderLoader`
     doComputations(NUMBER_OF_ITERATIONS);
 
-    performance.mark('end-mainThread');
+    performance.mark('end-fromModule');
 
     setTimeout(() => removeLoader());
-    renderResult({ type: 'mainThread', duration: getDuration('mainThread') });
+    renderResult({ type: 'fromModule', duration: getDuration('fromModule') });
   }, 100);
-});
-
-function doComputationsInline(iterations = 100000000) {
-  /* this function is an exact copy of `/src/doComputations.js` */
-  const arr = [];
-  for (var i = 0; i < iterations; i++) {
-    const val = i * Math.sqrt(arr.length);
-    if (arr.length > 1000000) {
-      arr.length = 200000;
-    }
-    arr.push({ val });
-  }
-  return arr;
-}
-
-mainThreadInlineButton.addEventListener('click', () => {
-  performance.mark('start-mainThreadInline');
-
-  renderLoader();
-  setTimeout(() => { // give a chance to `renderLoader`
-    doComputations(NUMBER_OF_ITERATIONS);
-
-    performance.mark('end-mainThreadInline');
-
-    setTimeout(() => removeLoader());
-    renderResult({
-      type: 'mainThreadInline',
-      duration: getDuration('mainThreadInline'),
-    }, 100);
-  });
-});
-
-workerButton.addEventListener('click', () => {
-  const webpackWorker = createNewWorker();
-  webpackWorker.onmessage = e => {
-    performance.mark('end-webpackWorker');
-    removeLoader();
-    renderResult({
-      type: 'webpackWorker',
-      duration: getDuration('webpackWorker'),
-    });
-    webpackWorker.terminate();
-  };
-
-  renderLoader();
-  performance.mark('start-webpackWorker');
-
-  webpackWorker.postMessage(NUMBER_OF_ITERATIONS);
-});
-
-standaloneWorkerButton.addEventListener('click', () => {
-  const standaloneWorker = new Worker(stanadloneWorkerURL);
-  standaloneWorker.onmessage = e => {
-    performance.mark('end-standaloneWorker');
-    removeLoader();
-    renderResult({
-      type: 'standaloneWorker',
-      duration: getDuration('standaloneWorker'),
-    });
-    standaloneWorker.terminate();
-  };
-
-  renderLoader();
-  performance.mark('start-standaloneWorker');
-
-  standaloneWorker.postMessage(NUMBER_OF_ITERATIONS);
 });

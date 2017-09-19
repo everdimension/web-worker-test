@@ -7,32 +7,27 @@ of iterations&nbsp;(100&#8239;000&#8239;000 by default).
 
 The performance of the function itself does not matter. The main purpose is
 to compare how long it takes to run this function in different conditions:
-in the main thread and in the main worker.
-
-As expected, it takes approximately the same time in a Worker and in the main
-thread, but when it is executed in a Worker the interface is not blocked.
+code bundled with webpack and code untouched by webpack.
 
 ## Surprisingly bad Chrome performance
 **The peculiarity that I've noticed** is that the function takes **much** longer
-to run in Chrome (latest version, `61.0.3163.91`) when it is `imported` with webpack.
+to run in Chrome (latest version, `61.0.3163.91`) when it is *bundled* with webpack.
 See [source code](https://github.com/everdimension/web-worker-test/tree/master/src)
 for details.
 
 My results in different browsers (on mac os `10.12.6`):
 
 #### Safari (`10.1.2`):
-* Web Worker without imports and not bundled with webpack: 4131ms
-* Web Worker with imports bundled with webpack: 4058ms
-* Main thread: 3060ms
+* Not bundled: 4625ms (slower)
+* Bundled with webpack: 3078ms (faster)
 
 #### Firefox (`55.0.3`):
-* Web Worker without imports and not bundled with webpack: 7726ms
-* Web Worker with imports bundled with webpack: 7334ms
-* Main thread: 5410ms
+* Not bundled: 5543ms
+* Bundled with webpack: 5470ms
 
 #### Chrome (`61.0.3163.91`):
-* Web Worker without imports and not bundled with webpack: 13329ms
-* **Web Worker with imports bundled with webpack: 45890ms**
-* **Main thread: 38866ms**
+* Not bundled: 7539ms (faster)
+* Bundled with webpack: 39781ms (**5 times slower**)
 
-The last two chrome results are extremely slow. I wonder why.
+Why does chrome perform so much worse when the code is wrapped
+with standard webpack bootstrapping stuff?...
