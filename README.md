@@ -1,3 +1,10 @@
+## UPDATE
+Read this issue for explanation and solution: https://github.com/webpack/webpack/issues/5697  
+*TLDR*: babel transpiles code and reads `arguments` variable, this operation is slow in Chrome.
+
+Solution: use `babel-plugin-transform-es2015-parameters@^v7.0.0` and use
+["loose" mode](https://github.com/babel/babel-preset-env#loose)
+
 ## Intro
 
 The code here measures performance of a
