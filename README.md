@@ -1,3 +1,8 @@
+UPD: install babel-plugin-transform-es2015-parameters@^v7.0.0 and add "loose" mode
+to babel preset and the perf will be back to normal in chrome.
+The problem was in accessing the `arguments` variable in transpiled code:
+https://github.com/webpack/webpack/issues/5697
+
 ## Intro
 
 The code here measures performance of a
